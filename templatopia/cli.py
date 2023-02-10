@@ -29,7 +29,6 @@ def main():
     outPath = Path(args.to_path)
     if(not outPath.exists()):
         outPath.mkdir()
-    
 
 if __name__ == "__main__":
     main()
