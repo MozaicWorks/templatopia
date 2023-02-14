@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pytest = "*"
 pystache = "*"
+parameterized = "*"
 
 [dev-packages]
 

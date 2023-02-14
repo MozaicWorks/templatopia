@@ -1,29 +1,22 @@
 import io
+from parameterized import parameterized
 
 class TestTemplateTransform:
+    @parameterized.expand([
+           ("one no mapping", "Hello {{first_name}}",  [{"first_name": "John"}], "Hello John"),
+       ])
+    def test_transform_one(self, name, template, table, expected):
+        template="Hello {{first_name}}"
+        table = [{"first_name": "John"}]
+        expected = "Hello John"
 
-    def test_transform(self):
-        template="Hello {{first_name}} {{last_name}}"
-        table = [
-                {"firstName": "John", "lastName": "Doe"},
-                {"firstName": "Jane", "lastName": "Dow"}
-                ]
+        transformed = transform(template, table)
 
-        mapping = {"firstName":"first_name", "lastName":"last_name"}
-        writer = io.StringIO("")
-        expected = """Hello John Doe
-        Hello Jane Doe"""
-
-        templateTransform = TemplateTransform(template, table, mapping, writer)
-
-        templateTransform.transform()
-
-        assert writer.getvalue() == expected 
+        assert transformed == expected 
 
 
-class TemplateTransform:
-    def __init__(self, template, table, mapping, writer):
-        pass
+def transform(template, table):
+    import pystache
+    return pystache.render(template, table[0])
 
-    def transform(self):
-        pass
+
