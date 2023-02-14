@@ -30,5 +30,10 @@ def main():
     if(not outPath.exists()):
         outPath.mkdir()
 
+def transform(template, table, mapping={}):
+    import pystache
+    mappedTable = table if mapping == {} else [{mapping[key]: value for key, value in item.items()} for item in table]
+    return [pystache.render(template, item) for item in mappedTable]
+
 if __name__ == "__main__":
     main()
