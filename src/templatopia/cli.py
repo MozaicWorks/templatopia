@@ -30,5 +30,20 @@ def main():
     if(not outPath.exists()):
         outPath.mkdir()
 
+    mappingArgs = args.map
+    mapping = {item.split(":")[0]:item.split(":")[1] for item in mappingArgs}
+
+    from TableReaderFromCsv import CsvReader
+    reader = CsvReader(csvFilePath)
+    for row in reader.readNext():
+        from transformer import transform
+        template = readTemplate(templateFilePath)
+        transformed = transform(template, row, mapping)
+        print(transformed)
+
+def readTemplate(templatePath):
+    with(open(templatePath, "r") as templateFile):
+        return templateFile.read()
+
 if __name__ == "__main__":
     main()
