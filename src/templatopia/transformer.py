@@ -1,5 +1,5 @@
 import pystache
 
-def transform(template, table, mapping:dict={}):
-    mappedTable = table if mapping == {} else [{mapping[key]: value for key, value in item.items()} for item in table]
-    return [pystache.render(template, item) for item in mappedTable]
+def transform(template, values, mapping:dict={}):
+    mappedValues = values if mapping == {} else {mapping.get(key, key): value for key, value in values.items()}
+    return pystache.render(template, mappedValues)

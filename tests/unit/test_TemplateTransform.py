@@ -5,36 +5,25 @@ from pytest import raises
 
 class TestTemplateTransform:
     @parameterized.expand([
-           ("zero items no mapping", "Hello {{first_name}}",  [], []),
-           ("one item no mapping", "Hello {{first_name}}",  [{"first_name": "John"}], ["Hello John"]),
-           ("two item no mapping", "Hello {{first_name}}",  [{"first_name": "John"}, {"first_name": "Jane"}], ["Hello John", "Hello Jane"]),
+           ("no mapping", "Hello {{first_name}}",  {"first_name": "John"}, "Hello John"),
        ])
-    def test_transform_no_mapping(self, name, template, table, expected):
-        transformed = transform(template, table)
+    def test_transform_no_mapping(self, name, template, values, expected):
+        transformed = transform(template, values)
 
         assert transformed == expected 
 
     @parameterized.expand([
-        ("zero items one mapping", "Hello {{firstName}}",  [], {"first_name":"firstName"}, []),
-        ("one item one mapping", "Hello {{firstName}}",  [{"first_name": "John"}], {"first_name": "firstName"}, ["Hello John"]),
-        ("two items one mapping", "Hello {{firstName}}",  [{"first_name": "John"}, {"first_name": "Jane"}], {"first_name": "firstName"}, ["Hello John", "Hello Jane"]),
-        ("two items two mappings", "Hello {{firstName}} {{lastName}}",  [{"first_name": "John", "last_name":"Doe"}, {"first_name": "Jane", "last_name": "Dow"}], {"first_name": "firstName", "last_name": "lastName"}, ["Hello John Doe", "Hello Jane Dow"]),
-        ("bug", "Hello {{firstName}} {{lastName}}",  [{"first_name": "John", "last_name":"Doe"}], {"first_name": "firstName", "last_name": "lastName"}, ["Hello John Doe"]),
+        ("one mapping", "Hello {{firstName}}",  {"first_name": "John"}, {"first_name": "firstName"}, "Hello John"),
+        ("two mappings", "{{firstName}}-{{lastName}}.svg",  {"first_name": "John", "last_name":"Doe"}, {"first_name": "firstName", "last_name": "lastName"}, "John-Doe.svg"),
        ])
-    def test_transform_mapping(self, name, template, table, mapping, expected):
-        transformed = transform(template, table, mapping)
+    def test_transform_mapping(self, name, template, values, mapping, expected):
+        transformed = transform(template, values, mapping)
 
         assert transformed == expected 
 
-    def test_mapping(self):
-        mappingArgs = ["firstName:first_name", "lastName:last_name"] 
-        mapping = {item.split(":")[0]:item.split(":")[1] for item in mappingArgs}
-        assert mapping["firstName"] == "first_name"
-        assert mapping["lastName"] == "last_name"
- 
-
     @parameterized.expand([
-        ("template value not found", "Hello {{firstName}}",  [{'name': "John Doe"}], {}, ["Hello "]),
+        ("template value not found", "Hello {{firstName}}",  {'name': "John Doe"}, {}, "Hello "),
+        ("mapping not found", "Hello {{firstName}}",  {'first_name': "John", "last_name": "Doe", "user_email": "john@doe.com"}, {"first_name":"firstName", "last_name":"lastName"}, "Hello John"),
        ])
     def test_edge_cases(self, name, template, table, mapping, expected):
         transformed = transform(template, table, mapping)

@@ -8,4 +8,4 @@ class CsvReader:
          with open(self.__filePath, 'r', newline=None) as csvfile:
             csvReader = DictReader(csvfile)
             for row in csvReader:
-                yield [row]
+                yield row
