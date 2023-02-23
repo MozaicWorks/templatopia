@@ -5,7 +5,7 @@ class CsvReader:
         self.__filePath = filePath
 
     def readNext(self):
-         with open(self.__filePath, 'r', newline=None) as csvfile:
+        with open(self.__filePath, 'r', newline=None, encoding="utf-8") as csvfile:
             csvReader = DictReader(csvfile)
             for row in csvReader:
                 yield row

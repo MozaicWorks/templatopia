@@ -1,7 +1,6 @@
-import io
 from parameterized import parameterized
 from templatopia.transformer import transform
-from pytest import raises
+
 
 class TestTemplateTransform:
     @parameterized.expand([
@@ -10,7 +9,7 @@ class TestTemplateTransform:
     def test_transform_no_mapping(self, name, template, values, expected):
         transformed = transform(template, values)
 
-        assert transformed == expected 
+        assert transformed == expected
 
     @parameterized.expand([
         ("one mapping", "Hello {{firstName}}",  {"first_name": "John"}, {"first_name": "firstName"}, "Hello John"),
@@ -19,7 +18,7 @@ class TestTemplateTransform:
     def test_transform_mapping(self, name, template, values, mapping, expected):
         transformed = transform(template, values, mapping)
 
-        assert transformed == expected 
+        assert transformed == expected
 
     @parameterized.expand([
         ("template value not found", "Hello {{firstName}}",  {'name': "John Doe"}, {}, "Hello "),
@@ -28,4 +27,4 @@ class TestTemplateTransform:
     def test_edge_cases(self, name, template, table, mapping, expected):
         transformed = transform(template, table, mapping)
 
-        assert transformed == expected 
+        assert transformed == expected
