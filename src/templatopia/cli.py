@@ -1,7 +1,10 @@
 import argparse
 from pathlib import Path
 import sys
-
+from TransformProcess import TransformProcess
+from TableReaderFromCsv import CsvReader
+from ConsoleWriter import ConsoleWriter
+from FileWriter import FileWriter
 
 def main():
     parser = argparse.ArgumentParser(
@@ -28,34 +31,26 @@ def main():
     templateFilePath = Path(args.template_path, args.template)
     if not templateFilePath.exists():
         sys.exit(f"Template file not found: {templateFilePath}")
+    template = readTemplate(templateFilePath)
 
     csvFilePath = Path(args.from_csv)
     if not csvFilePath.exists():
         sys.exit(f"List file not found: {csvFilePath}")
+    reader = CsvReader(csvFilePath)
 
     outPath = Path(args.to_path)
     if not outPath.exists():
         outPath.mkdir()
+    fileWriter = FileWriter(outPath)
 
     mapping = parseMapFromString(args.map)
     commonValues = parseMapFromString(args.common_value)
-
     fileNameTemplate = args.name_template
 
-    from TableReaderFromCsv import CsvReader
-    reader = CsvReader(csvFilePath)
-    template = readTemplate(templateFilePath)
-
-    from ConsoleWriter import ConsoleWriter
     writer = ConsoleWriter()
-    for row in reader.readNext():
-        doTransform(row | commonValues, template, fileNameTemplate, mapping, writer)
-
-    from FileWriter import FileWriter
-    fileWriter = FileWriter(outPath)
-    for row in reader.readNext():
-        doTransform(row | commonValues, template, fileNameTemplate, mapping, fileWriter)
-
+    transformProcess = TransformProcess(mapping, commonValues)
+    transformProcess.run(reader, writer, template, fileNameTemplate)
+    transformProcess.run(reader, fileWriter, template, fileNameTemplate)
 
 def parseMapFromString(argsString):
     return {item.split(":")[0]:item.split(":")[1] for item in argsString}
@@ -63,12 +58,6 @@ def parseMapFromString(argsString):
 def readTemplate(templatePath):
     with open(templatePath, "r", encoding = "utf-8") as templateFile:
         return templateFile.read()
-
-def doTransform(row, template, fileNameTemplate, mapping, writer):
-    from transformer import transform
-    transformed = transform(template, row, mapping)
-    fileName = transform(fileNameTemplate, row, mapping)
-    writer.write(fileName, transformed)
 
 if __name__ == "__main__":
     main()
