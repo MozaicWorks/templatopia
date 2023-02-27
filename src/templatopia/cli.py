@@ -5,6 +5,7 @@ from TransformProcess import TransformProcess
 from TableReaderFromCsv import CsvReader
 from ConsoleWriter import ConsoleWriter
 from FileWriter import FileWriter
+from TemplatedRow import TemplatedRow
 
 def main():
     parser = argparse.ArgumentParser(
@@ -31,7 +32,7 @@ def main():
     templateFilePath = Path(args.template_path, args.template)
     if not templateFilePath.exists():
         sys.exit(f"Template file not found: {templateFilePath}")
-    template = readTemplate(templateFilePath)
+    contentTemplate = readTemplate(templateFilePath)
 
     csvFilePath = Path(args.from_csv)
     if not csvFilePath.exists():
@@ -45,12 +46,14 @@ def main():
 
     mapping = parseMapFromString(args.map)
     commonValues = parseMapFromString(args.common_value)
-    fileNameTemplate = args.name_template
+    nameTemplate = args.name_template
 
     writer = ConsoleWriter()
     transformProcess = TransformProcess(mapping, commonValues)
-    transformProcess.run(reader, writer, template, fileNameTemplate)
-    transformProcess.run(reader, fileWriter, template, fileNameTemplate)
+    templatedRow = TemplatedRow(nameTemplate, contentTemplate)
+    for transformedRow in transformProcess.next(reader, templatedRow):
+        writer.write(transformedRow)
+        fileWriter.write(transformedRow)
 
 def parseMapFromString(argsString):
     return {item.split(":")[0]:item.split(":")[1] for item in argsString}

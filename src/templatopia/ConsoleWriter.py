@@ -1,3 +1,5 @@
+from TransformedRow import TransformedRow
+
 class ConsoleWriter:
-    def write(self, fileName, fileContent):
-        print(f"{fileName}: {fileContent}")
+    def write(self, transformedRow : TransformedRow):
+        print(transformedRow)

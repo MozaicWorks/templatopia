@@ -8,6 +8,7 @@ pytest = "*"
 pystache = "*"
 parameterized = "*"
 pylint = "*"
+neovim = "*"
 
 [dev-packages]
 

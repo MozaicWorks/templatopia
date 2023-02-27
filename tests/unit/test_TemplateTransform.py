@@ -1,5 +1,5 @@
 from parameterized import parameterized
-from templatopia.transformer import Transformer 
+from templatopia.transformer import Transformer
 
 
 class TestTemplateTransform:

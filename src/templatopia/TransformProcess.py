@@ -1,4 +1,5 @@
 from transformer import Transformer
+from TemplatedRow import TemplatedRow
 
 class TransformProcess:
 
@@ -6,12 +7,7 @@ class TransformProcess:
         self.mapping = mapping
         self.commonValues = commonValues
 
-    def run(self, reader, writer, template, fileNameTemplate):
-        for row in reader.readNext():
-            self.__doTransform(row | self.commonValues, writer, template, fileNameTemplate)
-
-    def __doTransform(self, values, writer, template, fileNameTemplate):
-        theTransformer = Transformer(values, self.mapping)
-        transformed = theTransformer.transform(template)
-        fileName = theTransformer.transform(fileNameTemplate)
-        writer.write(fileName, transformed)
+    def next(self, rowReader, templatedRow : TemplatedRow):
+        for row in rowReader.readNext():
+            transformer = Transformer(row | self.commonValues, self.mapping)
+            yield transformer.transformRow(templatedRow)
