@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from TransformedRow import TransformedRow
 
-from transformer import Template
+from Template import Template
 
 
 @dataclass

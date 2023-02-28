@@ -4,9 +4,9 @@ from pathlib import Path
 
 from ConsoleWriter import ConsoleWriter
 from FileWriter import FileWriter
-from TableReaderFromCsv import CsvReader
+from TableReaderFromCsv import RowReaderFromCsv
+from Template import Template
 from TemplatedRow import RowTemplate
-from transformer import Template
 
 
 def main():
@@ -39,7 +39,7 @@ def main():
     csvFilePath = Path(args.from_csv)
     if not csvFilePath.exists():
         sys.exit(f"List file not found: {csvFilePath}")
-    reader = CsvReader(csvFilePath)
+    reader = RowReaderFromCsv(csvFilePath)
 
     outPath = Path(args.to_path)
     if not outPath.exists():

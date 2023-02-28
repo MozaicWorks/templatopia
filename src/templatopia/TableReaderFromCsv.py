@@ -1,7 +1,7 @@
 from csv import DictReader
 
 
-class CsvReader:
+class RowReaderFromCsv:
     def __init__(self, filePath):
         self.__filePath = filePath
 
