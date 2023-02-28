@@ -1,5 +1,7 @@
 from pathlib import Path
+
 from TransformedRow import TransformedRow
+
 
 class FileWriter:
     def __init__(self, path):

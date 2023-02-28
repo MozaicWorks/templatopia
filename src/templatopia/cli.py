@@ -1,11 +1,13 @@
 import argparse
-from pathlib import Path
 import sys
-from TransformProcess import TransformProcess
-from TableReaderFromCsv import CsvReader
+from pathlib import Path
+
 from ConsoleWriter import ConsoleWriter
 from FileWriter import FileWriter
+from TableReaderFromCsv import CsvReader
 from TemplatedRow import TemplatedRow
+from TransformProcess import TransformProcess
+
 
 def main():
     parser = argparse.ArgumentParser(

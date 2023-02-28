@@ -1,5 +1,6 @@
-from transformer import Transformer
 from TemplatedRow import TemplatedRow
+from transformer import Transformer
+
 
 class TransformProcess:
 

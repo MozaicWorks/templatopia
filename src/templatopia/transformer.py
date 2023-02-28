@@ -1,6 +1,7 @@
 import pystache
-from TransformedRow import TransformedRow
 from TemplatedRow import TemplatedRow
+from TransformedRow import TransformedRow
+
 
 class Transformer:
     def __init__(self, values, mapping: dict=None):
