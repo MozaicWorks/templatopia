@@ -1,6 +1,6 @@
 from parameterized import parameterized
 
-from templatopia.transformer import Transformer
+from templatopia.Template import Template
 
 
 class TestTemplateTransform:
@@ -8,9 +8,9 @@ class TestTemplateTransform:
            ("no mapping", "Hello {{first_name}}",  {"first_name": "John"}, "Hello John"),
        ])
     def test_transform_no_mapping(self, name, template, values, expected):
-        theTransformer = Transformer(values)
+        theTemplate = Template(template)
 
-        transformed = theTransformer.transform(template)
+        transformed = theTemplate.render(values)
 
         assert transformed == expected
 
@@ -19,9 +19,9 @@ class TestTemplateTransform:
         ("two mappings", "{{firstName}}-{{lastName}}.svg",  {"first_name": "John", "last_name":"Doe"}, {"first_name": "firstName", "last_name": "lastName"}, "John-Doe.svg"),
        ])
     def test_transform_mapping(self, name, template, values, mapping, expected):
-        theTransformer = Transformer(values, mapping)
+        theTemplate = Template(template, mapping)
 
-        transformed = theTransformer.transform(template)
+        transformed = theTemplate.render(values)
 
         assert transformed == expected
 
@@ -30,8 +30,8 @@ class TestTemplateTransform:
         ("mapping not found", "Hello {{firstName}}",  {'first_name': "John", "last_name": "Doe", "user_email": "john@doe.com"}, {"first_name":"firstName", "last_name":"lastName"}, "Hello John"),
        ])
     def test_edge_cases(self, name, template, values, mapping, expected):
-        theTransformer = Transformer(values, mapping)
+        theTemplate = Template(template, mapping)
 
-        transformed = theTransformer.transform(template)
+        transformed = theTemplate.render(values)
 
         assert transformed == expected
