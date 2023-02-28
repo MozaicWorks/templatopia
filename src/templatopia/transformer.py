@@ -1,18 +1,13 @@
 import pystache
-from TemplatedRow import TemplatedRow
-from TransformedRow import TransformedRow
 
 
-class Transformer:
-    def __init__(self, values, mapping: dict=None):
-        mapping = {} if mapping is None else mapping
-        self.mappedValues = {mapping.get(key, key): value for key, value in values.items()}
+class Template:
+    def __init__(self, template, mapping: dict=None):
+        self.template = template
+        self.mapping = {} if mapping is None else mapping
 
-    def transform(self, template):
-        return pystache.render(template, self.mappedValues)
+    def __mapValues(self, values):
+        return {self.mapping.get(key, key): value for key, value in values.items()}
 
-    def transformRow(self, templatedRow : TemplatedRow):
-        return TransformedRow(
-                self.transform(templatedRow.nameTemplate),
-                self.transform(templatedRow.contentTemplate)
-            )
+    def render(self, values):
+        return pystache.render(self.template, self.__mapValues(values))

@@ -5,8 +5,8 @@ from pathlib import Path
 from ConsoleWriter import ConsoleWriter
 from FileWriter import FileWriter
 from TableReaderFromCsv import CsvReader
-from TemplatedRow import TemplatedRow
-from TransformProcess import TransformProcess
+from TemplatedRow import RowTemplate
+from transformer import Template
 
 
 def main():
@@ -51,9 +51,9 @@ def main():
     nameTemplate = args.name_template
 
     writer = ConsoleWriter()
-    transformProcess = TransformProcess(mapping, commonValues)
-    templatedRow = TemplatedRow(nameTemplate, contentTemplate)
-    for transformedRow in transformProcess.next(reader, templatedRow):
+    rowTemplate = RowTemplate(Template(nameTemplate, mapping), Template(contentTemplate, mapping))
+    for row in reader.readNext():
+        transformedRow = rowTemplate.render(row | commonValues)
         writer.write(transformedRow)
         fileWriter.write(transformedRow)
 
