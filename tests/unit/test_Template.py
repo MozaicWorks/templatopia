@@ -3,7 +3,7 @@ from parameterized import parameterized
 from templatopia.Template import Template
 
 
-class TestTemplateTransform:
+class TestTemplate:
     @parameterized.expand([
            ("no mapping", "Hello {{first_name}}",  {"first_name": "John"}, "Hello John"),
        ])
