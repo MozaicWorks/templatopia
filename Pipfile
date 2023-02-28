@@ -9,6 +9,9 @@ pystache = "*"
 parameterized = "*"
 pylint = "*"
 neovim = "*"
+yapf = "*"
+pynvim = "*"
+jedi = "*"
 
 [dev-packages]
 
