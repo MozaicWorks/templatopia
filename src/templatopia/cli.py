@@ -1,18 +1,20 @@
 import argparse
-import sys
 from pathlib import Path
 
 from ConsoleWriter import ConsoleWriter
 from FileWriter import FileWriter
+from MapParser import MapParser
+from MultiWriter import MultiWriter
 from TableReaderFromCsv import RowReaderFromCsv
 from Template import Template
 from TemplatedRow import RowTemplate
+from TemplateFileReader import TemplateFileReader
 
 
 def main():
     parser = argparse.ArgumentParser(
                     prog = 'templatopia',
-                    description = 'Creates files from a template file and a table, using Mustache for templating.',
+                    description = 'Creates files from a template and a list, using Mustache'
     )
     parser.add_argument("--template", required=True,
             help="The name of the template file. Eg. template.svg, template.eml")
@@ -20,49 +22,33 @@ def main():
             help="The csv file containing the source list")
     parser.add_argument("--to-path", required=False, default="out",
             help="The path where we write the output files. Defaults to `out`")
-    parser.add_argument("--name-template", required=False, default="{{index}}",
-            help="The template for the output file. It uses the same mappings plus the `index` variable. Defaults to {{index}}")
+    parser.add_argument("--name-template", required=True,
+            help="The template for the output file. It uses the same mappings")
     parser.add_argument("--map", required=False, action='append',
             help="Map from the input column name to the output variable. Eg. first_name:firstName")
     parser.add_argument("--common-value", required=False, action='append',
-            help="Template arguments that are common to all the rows and not in the input list. Eg. date:24 Feb 2023")
+            help="Template arguments common to all rows. Eg. date:24 Feb 2023")
     parser.add_argument("--template-path", required=False, default=".",
             help="The path to the template")
 
     args = parser.parse_args()
 
-    templateFilePath = Path(args.template_path, args.template)
-    if not templateFilePath.exists():
-        sys.exit(f"Template file not found: {templateFilePath}")
-    contentTemplate = readTemplate(templateFilePath)
+    mapping = MapParser(args.map).parse()
+    commonValues = MapParser(args.common_value).parse()
 
-    csvFilePath = Path(args.from_csv)
-    if not csvFilePath.exists():
-        sys.exit(f"List file not found: {csvFilePath}")
-    reader = RowReaderFromCsv(csvFilePath)
+    contentTemplateReader = TemplateFileReader(Path(args.template_path, args.template))
 
-    outPath = Path(args.to_path)
-    if not outPath.exists():
-        outPath.mkdir()
-    fileWriter = FileWriter(outPath)
+    rowTemplate = RowTemplate(
+            Template(args.name_template, mapping),
+            Template(contentTemplateReader.read(), mapping)
+            )
 
-    mapping = parseMapFromString(args.map)
-    commonValues = parseMapFromString(args.common_value)
-    nameTemplate = args.name_template
+    reader = RowReaderFromCsv(Path(args.from_csv))
+    multiWriter = MultiWriter(ConsoleWriter(), FileWriter(Path(args.to_path)))
 
-    writer = ConsoleWriter()
-    rowTemplate = RowTemplate(Template(nameTemplate, mapping), Template(contentTemplate, mapping))
     for row in reader.readNext():
         transformedRow = rowTemplate.render(row | commonValues)
-        writer.write(transformedRow)
-        fileWriter.write(transformedRow)
-
-def parseMapFromString(argsString):
-    return {item.split(":")[0]:item.split(":")[1] for item in argsString}
-
-def readTemplate(templatePath):
-    with open(templatePath, "r", encoding = "utf-8") as templateFile:
-        return templateFile.read()
+        multiWriter.write(transformedRow)
 
 if __name__ == "__main__":
     main()
