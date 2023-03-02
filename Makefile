@@ -1,3 +1,5 @@
+MAKEFLAGS += --silent
+
 run:
 	pipenv run python src/templatopia/cli.py
 
