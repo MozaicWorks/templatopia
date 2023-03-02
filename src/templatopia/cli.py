@@ -5,6 +5,7 @@ from ConsoleWriter import ConsoleWriter
 from FileWriter import FileWriter
 from MapParser import MapParser
 from MultiWriter import MultiWriter
+from ProgressDisplay import ProgressDisplay
 from TableReaderFromCsv import RowReaderFromCsv
 from Template import Template
 from TemplatedRow import RowTemplate
@@ -46,9 +47,16 @@ def main():
     reader = RowReaderFromCsv(Path(args.from_csv))
     multiWriter = MultiWriter(ConsoleWriter(), FileWriter(Path(args.to_path)))
 
-    for row in reader.readNext():
-        transformedRow = rowTemplate.render(row | commonValues)
-        multiWriter.write(transformedRow)
+    progressDisplay = ProgressDisplay(reader.totalRows())
+
+    for row, rowIndex in reader.readNext():
+        progressDisplay.progress(row, rowIndex)
+        try:
+            transformedRow = rowTemplate.render(row | commonValues)
+            multiWriter.write(transformedRow)
+            progressDisplay.success()
+        except Exception as e:
+            progressDisplay.error(e)
 
 if __name__ == "__main__":
     main()
