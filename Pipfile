@@ -12,6 +12,7 @@ neovim = "*"
 yapf = "*"
 pynvim = "*"
 jedi = "*"
+rich = "*"
 
 [dev-packages]
 
