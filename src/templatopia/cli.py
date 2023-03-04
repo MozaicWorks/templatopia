@@ -31,6 +31,8 @@ def main():
             help="Template arguments common to all rows. Eg. date:24 Feb 2023")
     parser.add_argument("--template-path", required=False, default=".",
             help="The path to the template")
+    parser.add_argument("--verbose", required=False, action=argparse.BooleanOptionalAction,
+            help="Display more information")
 
     args = parser.parse_args()
 
@@ -45,7 +47,7 @@ def main():
             )
 
     reader = RowReaderFromCsv(Path(args.from_csv))
-    multiWriter = MultiWriter(ConsoleWriter(), FileWriter(Path(args.to_path)))
+    multiWriter = MultiWriter(ConsoleWriter(args.verbose), FileWriter(Path(args.to_path)))
 
     progressDisplay = ProgressDisplay(reader.totalRows())
 
