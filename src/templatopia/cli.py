@@ -29,8 +29,8 @@ def main():
             help="Map from the input column name to the output variable. Eg. first_name:firstName")
     parser.add_argument("--common-value", required=False, action='append',
             help="Template arguments common to all rows. Eg. date:24 Feb 2023")
-    parser.add_argument("--template-path", required=False, default=".",
-            help="The path to the template")
+    parser.add_argument("--template-path", required=False, default="./template",
+            help="The path to the template. Defaults to ./template")
     parser.add_argument("--verbose", required=False, action=argparse.BooleanOptionalAction,
             help="Display more information")
 
