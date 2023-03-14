@@ -1,5 +1,6 @@
 import argparse
 from pathlib import Path
+import json
 
 from ConsoleWriter import ConsoleWriter
 from FileWriter import FileWriter
@@ -29,6 +30,10 @@ def main():
             help="Map from the input column name to the output variable. Eg. first_name:firstName")
     parser.add_argument("--common-value", required=False, action='append',
             help="Template arguments common to all rows. Eg. date:24 Feb 2023")
+    parser.add_argument("--map-from", required=False, default="map.json",
+            help="Map input column names to output variables as json file.")
+    parser.add_argument("--common-values-from", required=False, default="common-values.json",
+            help="Template arguments common to all rows as json file.")
     parser.add_argument("--template-path", required=False, default="./template",
             help="The path to the template. Defaults to ./template")
     parser.add_argument("--verbose", required=False, action=argparse.BooleanOptionalAction,
@@ -36,8 +41,8 @@ def main():
 
     args = parser.parse_args()
 
-    mapping = MapParser(args.map).parse()
-    commonValues = MapParser(args.common_value).parse()
+    mapping = MapParser(args.map).parse() if args.map else json.load(open(args.map_from))
+    commonValues = MapParser(args.common_value).parse() if args.common_value else json.load(open(args.common_values_from))
 
     contentTemplateReader = TemplateFileReader(Path(args.template_path, args.template))
 
