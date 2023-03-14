@@ -1,0 +1,31 @@
+MIME-Version: 1.0
+Content-Type: multipart/mixed;boundary="XXXXboundary text"
+To: {{firstName}} {{lastName}}<{{user_email}}>
+Subject: Your '{{achievement}}' achievement
+
+--XXXXboundary text
+Content-Type: text/html; charset=UTF-8
+
+<html>
+<head></head>
+<body>
+<p>
+Dear {{firstName}},<br><br>
+Congratulations on successfully achieving '{{achievement}}' on {{period}}.<br><br>
+
+Best wishes!<br>
+<b>{{senderName}}</b><br>
+<a href="https://google.com">Google</a>
+<p>
+</body>
+</html>
+
+
+--XXXXboundary text
+Content-Type:application/pdf; name="{{file.name}}"
+Content-Disposition:attachment;filename="{{file.name}}"
+Content-Transfer-Encoding: base64
+
+{{file.base64Content}}
+
+--XXXXboundary text
