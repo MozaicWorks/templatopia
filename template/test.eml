@@ -1,8 +1,21 @@
 MIME-Version: 1.0
-Content-Type: text/html
+Content-Type: multipart/mixed;boundary="XXXXboundary text"
 To: {{firstName}} {{lastName}}<{{user_email}}>
 Subject: Your '{{achievement}}' achievement
-Dear {{firstName}},<br/><br/>
-Congratulations on successfully achieving '{{achievement}}' on {{period}}.<br/><br/>
-Best wishes!<br/><br/>
-{{senderName}}
+
+--XXXXboundary text
+Content-Type: text/html; charset=UTF-8
+
+<html>
+<head></head>
+<body>
+<p>
+Dear {{firstName}},<br><br>
+Congratulations on successfully achieving '{{achievement}}' on {{period}}.<br><br>
+
+Best wishes!<br>
+<b>{{senderName}}</b><br>
+<a href="https://google.com">Google</a>
+<p>
+</body>
+</html>
