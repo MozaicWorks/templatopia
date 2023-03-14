@@ -1,0 +1,8 @@
+MIME-Version: 1.0
+Content-Type: text/html
+To: {{firstName}} {{lastName}}<{{user_email}}>
+Subject: Your '{{achievement}}' achievement
+Dear {{firstName}},<br/><br/>
+Congratulations on successfully achieving '{{achievement}}' on {{period}}.<br/><br/>
+Best wishes!<br/><br/>
+{{senderName}}
