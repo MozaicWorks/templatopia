@@ -1,17 +1,6 @@
 import argparse
-from pathlib import Path
 
-from ConsoleWriter import ConsoleWriter
-from FileWriter import FileWriter
-from MapLoader import MapLoader
-from MultiWriter import MultiWriter
-from ProgressDisplay import ProgressDisplay
-from TableReaderFromCsv import RowReaderFromCsv
-from Template import Template
-from TemplatedRow import RowTemplate
-from TemplateFileReader import TemplateFileReader
-from TransformProcess import TransformProcess
-
+from RunFromArgs import RunFromArgs
 
 def main():
     parser = argparse.ArgumentParser(
@@ -41,23 +30,7 @@ def main():
     parser.add_argument("--template-2", required=False,
             help="The name of the second template file")
 
-    args = parser.parse_args()
-
-    mapping = MapLoader(args.map, args.map_from).load()
-    commonValues = MapLoader(args.common_value, args.common_values_from).load()
-
-    contentTemplateReader = TemplateFileReader(Path(args.template_path, args.template))
-
-    rowTemplate = RowTemplate(
-            Template(args.name_template, mapping),
-            Template(contentTemplateReader.read(), mapping)
-            )
-
-    reader = RowReaderFromCsv(Path(args.from_csv))
-    multiWriter = MultiWriter(ConsoleWriter(args.verbose), FileWriter(Path(args.to_path)))
-    progressDisplay = ProgressDisplay(reader.totalRows())
-
-    TransformProcess(reader, rowTemplate, commonValues, multiWriter, progressDisplay).transform()
+    RunFromArgs(parser.parse_args()).run()
 
 if __name__ == "__main__":
     main()
