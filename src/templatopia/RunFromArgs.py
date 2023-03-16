@@ -5,9 +5,9 @@ from FileWriter import FileWriter
 from MapLoader import MapLoader
 from MultiWriter import MultiWriter
 from ProgressDisplay import ProgressDisplay
+from RowTemplate import RowTemplate
 from TableReaderFromCsv import RowReaderFromCsv
 from Template import Template
-from TemplatedRow import RowTemplate
 from TemplateFileReader import TemplateFileReader
 from TransformProcess import TransformProcess
 

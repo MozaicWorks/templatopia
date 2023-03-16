@@ -1,3 +1,6 @@
+from dataclasses import asdict
+
+
 class TransformProcess:
     def __init__(self, reader, rowTemplate, commonValues, writer, progressDisplay):
         self.reader = reader
@@ -11,6 +14,7 @@ class TransformProcess:
             self.progressDisplay.progress(row, rowIndex)
             try:
                 transformedRow = self.rowTemplate.render(row | self.commonValues)
+                #self.rowTemplate.render(row | self.commonValues | asdict(transformedRow))
                 self.writer.write(transformedRow)
                 self.progressDisplay.success()
             except Exception as e:
