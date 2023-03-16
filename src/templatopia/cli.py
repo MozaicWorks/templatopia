@@ -1,16 +1,16 @@
 import argparse
 from pathlib import Path
-import json
 
 from ConsoleWriter import ConsoleWriter
 from FileWriter import FileWriter
-from MapParser import MapParser
+from MapLoader import MapLoader
 from MultiWriter import MultiWriter
 from ProgressDisplay import ProgressDisplay
 from TableReaderFromCsv import RowReaderFromCsv
 from Template import Template
 from TemplatedRow import RowTemplate
 from TemplateFileReader import TemplateFileReader
+from TransformProcess import TransformProcess
 
 
 def main():
@@ -38,11 +38,13 @@ def main():
             help="The path to the template. Defaults to ./template")
     parser.add_argument("--verbose", required=False, action=argparse.BooleanOptionalAction,
             help="Display more information")
+    parser.add_argument("--template-2", required=False,
+            help="The name of the second template file")
 
     args = parser.parse_args()
 
-    mapping = MapParser(args.map).parse() if args.map else json.load(open(args.map_from))
-    commonValues = MapParser(args.common_value).parse() if args.common_value else json.load(open(args.common_values_from))
+    mapping = MapLoader(args.map, args.map_from).load()
+    commonValues = MapLoader(args.common_value, args.common_values_from).load()
 
     contentTemplateReader = TemplateFileReader(Path(args.template_path, args.template))
 
@@ -53,19 +55,9 @@ def main():
 
     reader = RowReaderFromCsv(Path(args.from_csv))
     multiWriter = MultiWriter(ConsoleWriter(args.verbose), FileWriter(Path(args.to_path)))
-
     progressDisplay = ProgressDisplay(reader.totalRows())
 
-    for row, rowIndex in reader.readNext():
-        progressDisplay.progress(row, rowIndex)
-        try:
-            transformedRow = rowTemplate.render(row | commonValues)
-            multiWriter.write(transformedRow)
-            progressDisplay.success()
-        except Exception as e:
-            progressDisplay.error(e)
-
-    progressDisplay.summary()
+    TransformProcess(reader, rowTemplate, commonValues, multiWriter, progressDisplay).transform()
 
 if __name__ == "__main__":
     main()
