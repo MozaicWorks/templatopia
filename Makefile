@@ -1,6 +1,7 @@
 MAKEFLAGS += --silent
 python=pipenv run python
 cli=src/templatopia/cli.py
+pyreverse=pipenv run pyreverse
 
 run:
 	$(python) $(cli)
@@ -19,3 +20,6 @@ unittest:
 	pipenv run pytest tests/unit/
 
 test: unittest acceptancetest
+
+diagram:
+	$(pyreverse) -d diagrams/ -o png src/templatopia/
