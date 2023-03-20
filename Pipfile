@@ -13,6 +13,8 @@ yapf = "*"
 pynvim = "*"
 jedi = "*"
 rich = "*"
+pytest-spec = "*"
+pytest-watcher = "*"
 
 [dev-packages]
 
