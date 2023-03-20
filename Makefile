@@ -1,6 +1,7 @@
 MAKEFLAGS += --silent
 python=pipenv run python
 cli=src/templatopia/cli.py
+pytest=pipenv run pytest
 pyreverse=pipenv run pyreverse
 
 run:
@@ -17,7 +18,7 @@ experiment:
 
 
 unittest:
-	pipenv run pytest tests/unit/
+	$(pytest) -v tests/unit/
 
 test: unittest acceptancetest
 
