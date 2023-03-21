@@ -1,4 +1,4 @@
-from TransformedRow import TransformedRow
+from .TransformedRow import TransformedRow
 from rich import print
 
 

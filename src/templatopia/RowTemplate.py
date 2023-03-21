@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from TransformedRow import TransformedRow
+from .TransformedRow import TransformedRow
 
-from Template import Template
+from .Template import Template
 
 
 @dataclass

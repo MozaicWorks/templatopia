@@ -1,5 +1,5 @@
-from JsonMapLoader import JsonMapLoader
-from MapParser import MapParser
+from .JsonMapLoader import JsonMapLoader
+from .MapParser import MapParser
 
 
 class MapLoader:

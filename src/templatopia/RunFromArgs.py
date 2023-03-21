@@ -1,15 +1,15 @@
 from pathlib import Path
 
-from ConsoleWriter import ConsoleWriter
-from FileWriter import FileWriter
-from MapLoader import MapLoader
-from MultiWriter import MultiWriter
-from ProgressDisplay import ProgressDisplay
-from RowTemplate import RowTemplate
-from TableReaderFromCsv import RowReaderFromCsv
-from Template import Template
-from TemplateFileReader import TemplateFileReader
-from TransformProcess import TransformProcess
+from .ConsoleWriter import ConsoleWriter
+from .FileWriter import FileWriter
+from .MapLoader import MapLoader
+from .MultiWriter import MultiWriter
+from .ProgressDisplay import ProgressDisplay
+from .RowTemplate import RowTemplate
+from .TableReaderFromCsv import RowReaderFromCsv
+from .Template import Template
+from .TemplateFileReader import TemplateFileReader
+from .TransformProcess import TransformProcess
 
 
 class RunFromArgs:
@@ -22,9 +22,9 @@ class RunFromArgs:
         progressDisplay = ProgressDisplay(reader.totalRows())
 
         TransformProcess(
-                reader=reader,
+                reader = reader,
 
-                rowTemplate=RowTemplate(
+                rowTemplate = RowTemplate(
                     Template(self.args.name_template, mapping),
                     Template(
                         TemplateFileReader(
@@ -44,6 +44,6 @@ class RunFromArgs:
                     ConsoleWriter(self.args.verbose),
                     FileWriter(Path(self.args.to_path))),
 
-                progressDisplay=progressDisplay
+                progressDisplay = progressDisplay
 
                 ).transform()
