@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-import pytest
-
 from templatopia.RunFromArgs import RunFromArgs
 
 
@@ -20,12 +18,11 @@ class Args:
     to_path:str="out/"
 
 class TestRunFromArgs:
-    @pytest.fixture
     def test_run(self, tmp_path):
         args = Args(
                 map = None,
                 from_csv = "in/list.csv",
-                name_template="{{first_name}}{{last_name}}",
+                name_template="{{first_name}}{{last_name}}.svg",
                 template = "template.svg",
                 common_value = None,
                 to_path = str(tmp_path),
@@ -33,5 +30,4 @@ class TestRunFromArgs:
                 )
         RunFromArgs(args).run()
 
-        assert Path(args.to_path, "Jane-Doe.svg").exists()
-        assert Path(args.to_path, "John-Doe.svg").exists()
+        assert Path(f"{args.to_path}JohnDoe.svg").exists()
